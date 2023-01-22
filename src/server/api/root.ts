@@ -1,4 +1,5 @@
-import { linksRouter } from './routers/links'
+import { productRouter } from './routers/product'
+import { supplierRouter } from './routers/supplier'
 import { createTRPCRouter } from './trpc'
 
 /**
@@ -7,7 +8,8 @@ import { createTRPCRouter } from './trpc'
  * All routers added in /api/routers should be manually added here
  */
 export const appRouter = createTRPCRouter({
-  links: linksRouter,
+  products: productRouter,
+  suppliers: supplierRouter,
 })
 
 // export type definition of API
