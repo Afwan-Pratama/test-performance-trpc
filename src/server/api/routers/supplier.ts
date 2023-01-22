@@ -6,6 +6,21 @@ export const supplierRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.supplier.findMany()
   }),
+  getAllWithProduct: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.supplier.findMany({
+      include: {
+        product: {
+          select: {
+            name: true,
+            price: true,
+            material: true,
+            description: true,
+            imageUrl: true,
+          },
+        },
+      },
+    })
+  }),
   addSupplier: publicProcedure
     .input(
       z.object({
