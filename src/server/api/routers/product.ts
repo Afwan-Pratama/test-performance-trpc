@@ -73,7 +73,14 @@ export const productRouter = createTRPCRouter({
     )
     .mutation(({ input, ctx }) => {
       return ctx.prisma.product.create({
-        data: input,
+        data: {
+          name: input.name.toLowerCase(),
+          description: input.description.toLocaleLowerCase(),
+          material: input.material.toLowerCase(),
+          imageUrl: input.imageUrl,
+          price: input.price,
+          supplierId: input.supplierId,
+        },
       })
     }),
   updateProduct: publicProcedure
