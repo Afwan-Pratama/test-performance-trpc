@@ -19,6 +19,26 @@ export const productRouter = createTRPCRouter({
       },
     })
   }),
+  getAllWithLimit: publicProcedure
+    .input(z.object({ limit: z.number() }))
+    .query(({ input, ctx }) => {
+      return ctx.prisma.product.findMany({
+        take: input.limit,
+      })
+    }),
+  getAllWithPagination: publicProcedure
+    .input(
+      z.object({
+        page: z.number(),
+        limit: z.number(),
+      })
+    )
+    .query(({ input, ctx }) => {
+      return ctx.prisma.product.findMany({
+        skip: input.limit * input.page + 1,
+        take: input.limit,
+      })
+    }),
   addProduct: publicProcedure
     .input(
       z.object({
