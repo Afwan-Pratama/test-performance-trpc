@@ -4,9 +4,19 @@ import { createTRPCRouter, publicProcedure } from '../trpc'
 
 export const productRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
+    console.log(
+      'memory usage :',
+      process.memoryUsage().heapUsed / 1024 / 1024,
+      'MB'
+    )
     return ctx.prisma.product.findMany()
   }),
   getAllWithSupplier: publicProcedure.query(({ ctx }) => {
+    console.log(
+      'memory usage :',
+      process.memoryUsage().heapUsed / 1024 / 1024,
+      'MB'
+    )
     return ctx.prisma.product.findMany({
       include: {
         supplier: {
@@ -22,6 +32,11 @@ export const productRouter = createTRPCRouter({
   getAllWithLimit: publicProcedure
     .input(z.object({ limit: z.number() }))
     .query(({ input, ctx }) => {
+      console.log(
+        'memory usage :',
+        process.memoryUsage().heapUsed / 1024 / 1024,
+        'MB'
+      )
       return ctx.prisma.product.findMany({
         take: input.limit,
       })
@@ -34,6 +49,11 @@ export const productRouter = createTRPCRouter({
       })
     )
     .query(({ input, ctx }) => {
+      console.log(
+        'memory usage :',
+        process.memoryUsage().heapUsed / 1024 / 1024,
+        'MB'
+      )
       return ctx.prisma.product.findMany({
         skip: input.limit * input.page + 1,
         take: input.limit,
@@ -49,6 +69,11 @@ export const productRouter = createTRPCRouter({
       })
     )
     .query(({ input, ctx }) => {
+      console.log(
+        'memory usage :',
+        process.memoryUsage().heapUsed / 1024 / 1024,
+        'MB'
+      )
       return ctx.prisma.product.findMany({
         where: {
           OR: [
@@ -72,6 +97,11 @@ export const productRouter = createTRPCRouter({
       })
     )
     .mutation(({ input, ctx }) => {
+      console.log(
+        'memory usage :',
+        process.memoryUsage().heapUsed / 1024 / 1024,
+        'MB'
+      )
       return ctx.prisma.product.create({
         data: {
           name: input.name.toLowerCase(),
@@ -113,6 +143,11 @@ export const productRouter = createTRPCRouter({
           obj[indexObj] = newProduct[indexObj]
         }
       }
+      console.log(
+        'memory usage :',
+        process.memoryUsage().heapUsed / 1024 / 1024,
+        'MB'
+      )
       return ctx.prisma.product.update({
         data: obj,
         where: {
@@ -123,6 +158,11 @@ export const productRouter = createTRPCRouter({
   deleteProduct: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ input, ctx }) => {
+      console.log(
+        'memory usage :',
+        process.memoryUsage().heapUsed / 1024 / 1024,
+        'MB'
+      )
       return ctx.prisma.product.delete({
         where: {
           id: input.id,
