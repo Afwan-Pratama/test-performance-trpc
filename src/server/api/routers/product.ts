@@ -69,6 +69,20 @@ export const productRouter = createTRPCRouter({
       })
     )
     .query(({ input, ctx }) => {
+      type dictionaryProduct = { [index: string]: string | null | undefined }
+      const obj: object[] = []
+
+      const newProduct: dictionaryProduct = {
+        name: input.name?.toLowerCase(),
+        material: input.material?.toLowerCase(),
+        supplierId: input.supplierId,
+      }
+      for (let i = 0; i < Object.keys(newProduct).length; i++) {
+        const indexObj: string = Object.keys(newProduct)[i]
+        if (newProduct[indexObj]) {
+          obj.push({ [indexObj]: newProduct[indexObj] })
+        }
+      }
       console.log(
         'memory usage :',
         process.memoryUsage().heapUsed / 1024 / 1024,
@@ -76,12 +90,7 @@ export const productRouter = createTRPCRouter({
       )
       return ctx.prisma.product.findMany({
         where: {
-          OR: [
-            { id: input.id?.toLowerCase() ?? '' },
-            { name: input.name?.toLowerCase() ?? '' },
-            { material: input.material?.toLowerCase() ?? '' },
-            { supplierId: input.supplierId?.toLowerCase() ?? '' },
-          ],
+          AND: obj,
         },
       })
     }),
@@ -156,16 +165,16 @@ export const productRouter = createTRPCRouter({
       })
     }),
   deleteProduct: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ material: z.string() }))
     .mutation(({ input, ctx }) => {
       console.log(
         'memory usage :',
         process.memoryUsage().heapUsed / 1024 / 1024,
         'MB'
       )
-      return ctx.prisma.product.delete({
+      return ctx.prisma.product.deleteMany({
         where: {
-          id: input.id,
+          material: input.material,
         },
       })
     }),
